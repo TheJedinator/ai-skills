@@ -26,10 +26,10 @@ Navigate and understand Django models in any codebase. Provides:
 
 ```bash
 # Install for all projects (user scope)
-/plugin install django-models@TheJedinator
+/plugin install django-models@ai-skills
 
 # Or install for current project only
-claude plugin install django-models@TheJedinator --scope project
+claude plugin install django-models@ai-skills --scope project
 ```
 
 ## Plugin Structure
