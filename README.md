@@ -1,14 +1,10 @@
-# AI Skills
+# AI Skills Plugin Marketplace
 
-A collection of skills for Claude Code that extend its capabilities with specialized knowledge and workflows.
+A Claude Code plugin marketplace providing skills that extend Claude's capabilities with specialized knowledge and workflows.
 
-## What are Skills?
+## Available Plugins
 
-Skills are modular markdown packages that teach Claude Code domain-specific patterns, workflows, and best practices. They require zero infrastructure - just drop a skill folder into your `.claude/skills/` directory.
-
-## Available Skills
-
-### [django-models](skills/django-models/)
+### django-models
 
 Navigate and understand Django models in any codebase. Provides:
 
@@ -20,45 +16,48 @@ Navigate and understand Django models in any codebase. Provides:
 
 ## Installation
 
-### Global Installation (all projects)
+### 1. Add the Marketplace
 
 ```bash
-# Clone the repo
-git clone https://github.com/TheJedinator/ai-skills.git
-
-# Copy skill(s) to your Claude skills directory
-cp -r ai-skills/skills/django-models ~/.claude/skills/
+/plugin marketplace add TheJedinator/ai-skills
 ```
 
-### Project-Specific Installation
+### 2. Install a Plugin
 
-Reference the skill in your project's `CLAUDE.md`:
+```bash
+# Install for all projects (user scope)
+/plugin install django-models@TheJedinator
 
-```markdown
-## Django Model Navigation
-
-When exploring Django models, read the skill guide at `path/to/skills/django-models/SKILL.md`.
+# Or install for current project only
+claude plugin install django-models@TheJedinator --scope project
 ```
 
-## Skill Structure
+## Plugin Structure
 
-Each skill follows this structure:
+This marketplace follows the Claude Code plugin format:
 
 ```
-skill-name/
-├── SKILL.md              # Main skill file with frontmatter and instructions
-└── references/           # Optional detailed reference material
-    └── *.md              # Loaded on-demand by Claude
+ai-skills/
+├── .claude-plugin/
+│   └── marketplace.json        # Marketplace manifest
+└── django-models/              # Plugin
+    ├── .claude-plugin/
+    │   └── plugin.json         # Plugin manifest
+    └── skills/
+        └── django-models/
+            ├── SKILL.md        # Main skill file
+            └── references/     # On-demand reference material
 ```
 
 ## Contributing
 
-To add a new skill:
+To add a new plugin:
 
-1. Create a folder under `skills/` with your skill name
-2. Add a `SKILL.md` with YAML frontmatter (`name` and `description` fields)
-3. Keep instructions concise - Claude is smart, only add what it doesn't already know
-4. Add reference files for detailed domain knowledge that should load on-demand
+1. Create a plugin directory at the root (e.g., `my-plugin/`)
+2. Add `.claude-plugin/plugin.json` with name, version, description
+3. Add your skills under `skills/` within the plugin
+4. Update `marketplace.json` to include your plugin
+5. Submit a PR
 
 ## License
 

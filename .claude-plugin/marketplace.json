@@ -1,0 +1,13 @@
+{
+  "name": "ai-skills",
+  "owner": {
+    "name": "TheJedinator"
+  },
+  "plugins": [
+    {
+      "name": "django-models",
+      "source": "./django-models",
+      "description": "Navigate and understand Django models in any codebase"
+    }
+  ]
+}
