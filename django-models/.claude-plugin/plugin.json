@@ -1,7 +1,7 @@
 {
   "name": "django-models",
   "version": "1.0.0",
-  "description": "Navigate and understand Django models in any codebase. Provides model discovery patterns, field type references, relationship navigation strategies, and financial domain business logic as an example of how to extend for your own use case.",
+  "description": "Navigate and understand Django models in any codebase. Provides model discovery patterns, field type references, relationship navigation strategies, and common query patterns based on official Django documentation.",
   "author": {
     "name": "TheJedinator",
     "url": "https://github.com/TheJedinator"
