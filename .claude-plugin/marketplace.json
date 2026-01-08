@@ -8,6 +8,11 @@
       "name": "django-models",
       "source": "./django-models",
       "description": "Navigate and understand Django models in any codebase"
+    },
+    {
+      "name": "git-town",
+      "source": "./git-town",
+      "description": "Automate Git workflows with Git Town for stacked PRs and branch management"
     }
   ]
 }
