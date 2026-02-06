@@ -1,0 +1,12 @@
+{
+  "name": "torvalds-stallman",
+  "version": "1.0.0",
+  "description": "Sardonic, Socratic code reviewer that pressure-tests design decisions with the critical eye of a veteran principal engineer. Interrogates naming, abstraction choices, logic correctness, performance, test quality, and systems thinking. Asks pointed questions, mocks laziness, and stays silent on good code.",
+  "author": {
+    "name": "TheJedinator",
+    "url": "https://github.com/TheJedinator"
+  },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "keywords": ["code-review", "design-review", "architecture", "quality", "critique"]
+}

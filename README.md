@@ -25,6 +25,17 @@ Automate Git workflows with Git Town. Provides:
 - Branch lineage tracking and management
 - Comprehensive guidance on when to use git town vs manual git commands
 
+### torvalds-stallman
+
+Sardonic, Socratic code reviewer that pressure-tests design decisions. Provides:
+
+- Design-level critique of naming, abstractions, and architecture
+- Logic correctness analysis and edge case detection
+- Performance review (N+1 queries, hot path analysis)
+- Test quality assessment (coverage gaps, mock depth, parameterization)
+- Systems thinking critique (coupling, downstream implications)
+- Runs as an autonomous agent with read-only codebase analysis
+
 ## Installation
 
 ### 1. Add the Marketplace

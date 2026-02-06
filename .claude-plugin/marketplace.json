@@ -13,6 +13,11 @@
       "name": "git-town",
       "source": "./git-town",
       "description": "Automate Git workflows with Git Town for stacked PRs and branch management"
+    },
+    {
+      "name": "torvalds-stallman",
+      "source": "./torvalds-stallman",
+      "description": "Sardonic, Socratic code reviewer that pressure-tests design decisions"
     }
   ]
 }
