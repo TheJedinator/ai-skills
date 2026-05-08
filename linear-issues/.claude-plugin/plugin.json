@@ -1,0 +1,12 @@
+{
+  "name": "linear-issues",
+  "version": "1.0.0",
+  "description": "Query and create Linear issues, manage sprints, triage, and team workload. Provides GraphQL query patterns for the Linear API to fetch assigned issues, sprint progress, team workload, triage queues, and create/update issues.",
+  "author": {
+    "name": "TheJedinator",
+    "url": "https://github.com/TheJedinator"
+  },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "keywords": ["linear", "issues", "project-management", "sprints", "graphql", "triage"]
+}
