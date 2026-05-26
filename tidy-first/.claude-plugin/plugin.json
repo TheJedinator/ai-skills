@@ -1,0 +1,12 @@
+{
+  "name": "tidy-first",
+  "version": "1.0.0",
+  "description": "Code refactoring approach that separates structural (tidying) changes from behavioral changes. Catalogs tidying patterns: guard clauses, dead code, asymmetric patterns, tangled declarations, opaque expressions, magic literals, long blocks.",
+  "author": {
+    "name": "TheJedinator",
+    "url": "https://github.com/TheJedinator"
+  },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "keywords": ["refactoring", "tidy-first", "code-quality", "patterns"]
+}

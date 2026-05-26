@@ -18,6 +18,11 @@
       "name": "torvalds-stallman",
       "source": "./torvalds-stallman",
       "description": "Sardonic, Socratic code reviewer that pressure-tests design decisions"
+    },
+    {
+      "name": "tidy-first",
+      "source": "./tidy-first",
+      "description": "Tidy-first refactoring patterns: separate structural changes from behavioral changes"
     }
   ]
 }
