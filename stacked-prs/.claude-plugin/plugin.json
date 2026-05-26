@@ -1,0 +1,12 @@
+{
+  "name": "stacked-prs",
+  "version": "1.0.0",
+  "description": "Manage stacked pull requests: creating PR chains, cascade rebasing after changes, merging master down after a parent ships, restructuring/splitting stacks, and the nuclear close-and-recreate option.",
+  "author": {
+    "name": "TheJedinator",
+    "url": "https://github.com/TheJedinator"
+  },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "keywords": ["stacked-prs", "github", "git", "rebase", "workflow", "code-review"]
+}

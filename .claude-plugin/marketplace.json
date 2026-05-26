@@ -5,24 +5,29 @@
   },
   "plugins": [
     {
+      "name": "creating-pull-requests",
+      "source": "./creating-pull-requests",
+      "description": "Standardized PR creation with ## Why / ## What format using gh CLI"
+    },
+    {
       "name": "django-models",
       "source": "./django-models",
       "description": "Navigate and understand Django models in any codebase"
     },
     {
-      "name": "git-town",
-      "source": "./git-town",
-      "description": "Automate Git workflows with Git Town for stacked PRs and branch management"
-    },
-    {
-      "name": "torvalds-stallman",
-      "source": "./torvalds-stallman",
-      "description": "Sardonic, Socratic code reviewer that pressure-tests design decisions"
+      "name": "stacked-prs",
+      "source": "./stacked-prs",
+      "description": "Manage stacked pull requests: creation, cascade rebase, merge-down, and restructuring"
     },
     {
       "name": "tidy-first",
       "source": "./tidy-first",
       "description": "Tidy-first refactoring patterns: separate structural changes from behavioral changes"
+    },
+    {
+      "name": "torvalds-stallman",
+      "source": "./torvalds-stallman",
+      "description": "Sardonic, Socratic code reviewer that pressure-tests design decisions"
     }
   ]
 }
