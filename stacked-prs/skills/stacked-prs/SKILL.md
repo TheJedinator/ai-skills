@@ -5,8 +5,6 @@ description: Manage stacked pull requests — creating PR chains, cascade rebasi
 
 # Stacked PRs
 
-Stacked PRs are a chain of pull requests where each builds on the previous one. They enable incremental review of large features while keeping each PR small and focused.
-
 ## Mental Model
 
 ```
@@ -24,22 +22,22 @@ Build each branch from its parent. Push and create PRs with explicit `--base`:
 
 ```bash
 # PR 1
-git checkout -b user/feature-1-models master
+git checkout -b <user>/feature-1-models master
 # ... implement ...
-git push -u origin user/feature-1-models
+git push -u origin <user>/feature-1-models
 gh pr create --base master --title "Part 1: Models" --assignee @me
 
 # PR 2
-git checkout -b user/feature-2-service user/feature-1-models
+git checkout -b <user>/feature-2-service <user>/feature-1-models
 # ... implement ...
-git push -u origin user/feature-2-service
-gh pr create --base user/feature-1-models --title "Part 2: Service" --assignee @me
+git push -u origin <user>/feature-2-service
+gh pr create --base <user>/feature-1-models --title "Part 2: Service" --assignee @me
 
 # PR 3
-git checkout -b user/feature-3-endpoint user/feature-2-service
+git checkout -b <user>/feature-3-endpoint <user>/feature-2-service
 # ... implement ...
-git push -u origin user/feature-3-endpoint
-gh pr create --base user/feature-2-service --title "Part 3: Endpoint" --assignee @me
+git push -u origin <user>/feature-3-endpoint
+gh pr create --base <user>/feature-2-service --title "Part 3: Endpoint" --assignee @me
 ```
 
 ### Naming Convention
@@ -47,9 +45,10 @@ gh pr create --base user/feature-2-service --title "Part 3: Endpoint" --assignee
 Number branches to make stack order obvious:
 
 ```
-user/ticket-1-first-change
-user/ticket-2-second-change
-user/ticket-3-third-change
+<user>/<ticket>-1-external-message-id
+<user>/<ticket>-2-delivery-event-model
+<user>/<ticket>-3-courier-webhook-model
+<user>/<ticket>-4-persist-on-send
 ```
 
 This prevents confusion when restructuring — branch names immediately tell you the order.
@@ -60,12 +59,12 @@ When you amend or add commits to a parent branch, all children must rebase. Work
 
 ```bash
 # Parent (PR 1) was amended
-git checkout user/feature-2-service
-git rebase user/feature-1-models
+git checkout <user>/feature-2-service
+git rebase <user>/feature-1-models
 git push --force-with-lease
 
-git checkout user/feature-3-endpoint
-git rebase user/feature-2-service
+git checkout <user>/feature-3-endpoint
+git rebase <user>/feature-2-service
 git push --force-with-lease
 ```
 
@@ -102,7 +101,7 @@ When a parent PR merges to master, the next child becomes the new stack root:
 git checkout master && git pull
 
 # Rebase PR 2 onto master (PR 1's commit will be skipped automatically)
-git checkout user/feature-2-service
+git checkout <user>/feature-2-service
 git rebase master
 git push --force-with-lease
 
@@ -110,8 +109,8 @@ git push --force-with-lease
 gh pr edit <pr-number> --base master
 
 # Cascade to remaining children
-git checkout user/feature-3-endpoint
-git rebase user/feature-2-service
+git checkout <user>/feature-3-endpoint
+git rebase <user>/feature-2-service
 git push --force-with-lease
 ```
 
@@ -125,25 +124,25 @@ When PRs need to be split, reordered, or renamed, the cleanest approach is the n
 
 ```bash
 # 1. Close all PRs in the stack
-gh pr close <pr-1-number>
-gh pr close <pr-2-number>
-gh pr close <pr-3-number>
+gh pr close <pr-1>
+gh pr close <pr-2>
+gh pr close <pr-3>
 
 # 2. Delete old remote branches
 git push origin --delete old-branch-1 old-branch-2 old-branch-3
 
 # 3. Create new branches pointing at the correct commits
-git branch user/feature-1-new-name <commit-sha-for-pr1>
-git branch user/feature-2-new-name <commit-sha-for-pr2>
-git branch user/feature-3-new-name <commit-sha-for-pr3>
+git branch <user>/feature-1-new-name <commit-sha-for-pr1>
+git branch <user>/feature-2-new-name <commit-sha-for-pr2>
+git branch <user>/feature-3-new-name <commit-sha-for-pr3>
 
 # 4. Push all new branches
-git push origin user/feature-1-new-name user/feature-2-new-name user/feature-3-new-name
+git push origin <user>/feature-1-new-name <user>/feature-2-new-name <user>/feature-3-new-name
 
 # 5. Create new PRs with correct stacking
-gh pr create --head user/feature-1-new-name --base master --title "..." --assignee @me
-gh pr create --head user/feature-2-new-name --base user/feature-1-new-name --title "..." --assignee @me
-gh pr create --head user/feature-3-new-name --base user/feature-2-new-name --title "..." --assignee @me
+gh pr create --head <user>/feature-1-new-name --base master --title "..." --assignee @me
+gh pr create --head <user>/feature-2-new-name --base <user>/feature-1-new-name --title "..." --assignee @me
+gh pr create --head <user>/feature-3-new-name --base <user>/feature-2-new-name --title "..." --assignee @me
 
 # 6. Clean up old local branches
 git branch -D old-branch-1 old-branch-2 old-branch-3
@@ -158,20 +157,20 @@ git branch -D old-branch-1 old-branch-2 old-branch-3
 
 ### Splitting a PR
 
-If a PR does too much, extract the commits:
+If a PR does too much (e.g., two models in one PR), extract the commits:
 
 ```bash
 # Start a new branch from the parent
-git checkout -b user/feature-2a-first-part user/feature-1-parent
+git checkout -b <user>/feature-2a-first-model <user>/feature-1-parent
 
 # Cherry-pick only the relevant commits (or implement fresh)
-# ... make changes for just part A ...
-git commit -m "Add first part"
+# ... make changes for just model A ...
+git commit -m "Add ModelA"
 
 # Now create the second branch from the first
-git checkout -b user/feature-2b-second-part user/feature-2a-first-part
-# ... make changes for just part B ...
-git commit -m "Add second part"
+git checkout -b <user>/feature-2b-second-model <user>/feature-2a-first-model
+# ... make changes for just model B ...
+git commit -m "Add ModelB"
 ```
 
 ## Verification After Any Stack Operation
@@ -182,12 +181,14 @@ After any rebase or restructure, verify the stack is healthy:
 # Check all PRs are open with correct bases
 gh pr list --author "@me" --state open \
   --json number,title,headRefName,baseRefName \
-  --jq '.[] | select(.headRefName | contains("feature")) | "\(.number): \(.title)\n  \(.headRefName) → \(.baseRefName)\n"'
+  --jq '.[] | select(.headRefName | startswith("<branch-prefix>")) | "\(.number): \(.title)\n  \(.headRefName) → \(.baseRefName)\n"'
 
-# Run tests on the leaf branch (catches everything in the stack)
+# Run the repo's lint, typecheck and tests on the leaf branch (catches everything)
 git checkout <leaf-branch>
-# Run your project's lint, typecheck, and test commands here
+<lint> && <typecheck> && <test>
 ```
+
+If a PR is missing, has the wrong base, or a check fails, fix it and run this block again. Stop when the list matches the intended stack and the checks pass.
 
 ## Common Pitfalls
 
@@ -200,3 +201,11 @@ git checkout <leaf-branch>
 | Rebasing in wrong order (child before parent) | Always rebase top-down: parent first, then children in order |
 | `gh pr edit --base` without rebasing first | Always rebase onto new base BEFORE updating the PR target |
 | Closing an unrelated PR when batch-closing | Filter by branch name pattern, not blanket close |
+
+## One Model Per PR Rule
+
+When building features that involve multiple models, each model creation or modification gets its own PR in the stack. This means:
+
+- Adding a field to an existing model = 1 PR
+- Creating a new model = 1 PR
+- Never bundle two model changes in one PR

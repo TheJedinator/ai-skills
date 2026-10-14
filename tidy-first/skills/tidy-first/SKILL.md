@@ -1,6 +1,6 @@
 ---
 name: tidy-first
-description: This skill should be used when the user asks to "refactor", "clean up code", "restructure", "rename", "extract method", "improve code quality", or when separating structural changes from behavioral changes. Enforces Tidy First approach to keep commits clean and focused.
+description: Separates structural (tidying) commits from behavioral commits and catalogs the common tidyings. Use when the user asks to "refactor", "clean up code", "restructure", "rename", "extract method", "improve code quality", or when a change needs tidying before the behavioral edit.
 ---
 
 # Tidy First
