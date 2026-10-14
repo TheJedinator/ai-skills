@@ -1,0 +1,12 @@
+{
+  "name": "handoff",
+  "version": "1.0.0",
+  "description": "Summarize the current session inline for another agent or person: what was done, what was learned, what comes next. Verified facts only.",
+  "author": {
+    "name": "TheJedinator",
+    "url": "https://github.com/TheJedinator"
+  },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "keywords": ["handoff", "session", "summary", "workflow"]
+}
