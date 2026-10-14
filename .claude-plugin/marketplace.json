@@ -41,6 +41,16 @@
       "name": "tidy-first",
       "source": "./tidy-first",
       "description": "Tidy-first refactoring patterns: separate structural changes from behavioral changes"
+    },
+    {
+      "name": "float-performance-how",
+      "source": "./float-performance-how",
+      "description": "Connect work to Float's values and calibrate performance for the HOW phase of performance reviews"
+    },
+    {
+      "name": "float-performance-what",
+      "source": "./float-performance-what",
+      "description": "Document tangible impact and business outcomes for the WHAT phase of performance reviews"
     }
   ],
   "description": "Personal skills for PR workflows, Linear and refactoring, plus a pointer to Matt Pocock's skills"

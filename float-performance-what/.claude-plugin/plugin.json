@@ -1,0 +1,16 @@
+{
+  "name": "float-performance-what",
+  "version": "1.0.0",
+  "description": "Document tangible impact and business outcomes for the WHAT phase of Float performance reviews.",
+  "author": {
+    "name": "TheJedinator",
+    "url": "https://github.com/TheJedinator"
+  },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "keywords": [
+    "performance-review",
+    "float",
+    "impact"
+  ]
+}

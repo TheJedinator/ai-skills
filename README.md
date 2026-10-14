@@ -8,6 +8,8 @@ A Claude Code plugin marketplace providing skills that extend Claude's capabilit
 |---|---|
 | babysit-pr-stack | Owns a chain of stacked PRs until every PR merges: merge order, restacking, reviews, CI |
 | creating-pull-requests | Creates a GitHub PR with a `## Why` / `## What` body from the branch diff |
+| float-performance-how | Connects work to Float's values and calibrates performance for the HOW phase of performance reviews |
+| float-performance-what | Documents tangible impact and business outcomes for the WHAT phase of performance reviews |
 | handoff | Summarizes the current session inline for another agent or person |
 | linear-issues | Queries and creates Linear issues, sprints, triage and team workload via GraphQL |
 | mattpocock-skills | Matt Pocock's skills (grilling, to-spec, tdd, code-review and more), installed from [mattpocock/skills](https://github.com/mattpocock/skills). Not copied here; updates come from upstream |

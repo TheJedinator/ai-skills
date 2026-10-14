@@ -1,0 +1,16 @@
+{
+  "name": "float-performance-how",
+  "version": "1.0.0",
+  "description": "Articulate key strengths, connect work to Float's values, and calibrate performance for the HOW phase of Float performance reviews.",
+  "author": {
+    "name": "TheJedinator",
+    "url": "https://github.com/TheJedinator"
+  },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "keywords": [
+    "performance-review",
+    "float",
+    "values"
+  ]
+}
