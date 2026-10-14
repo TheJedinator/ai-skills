@@ -10,8 +10,13 @@ A Claude Code plugin marketplace providing skills that extend Claude's capabilit
 | creating-pull-requests | Creates a GitHub PR with a `## Why` / `## What` body from the branch diff |
 | handoff | Summarizes the current session inline for another agent or person |
 | linear-issues | Queries and creates Linear issues, sprints, triage and team workload via GraphQL |
+| mattpocock-skills | Matt Pocock's skills (grilling, to-spec, tdd, code-review and more), installed from [mattpocock/skills](https://github.com/mattpocock/skills). Not copied here; updates come from upstream |
 | stacked-prs | Creates, cascade-rebases, merges down and restructures stacked PR chains |
 | tidy-first | Separates structural (tidying) commits from behavioral commits |
+
+## Matt Pocock's skills
+
+`mattpocock-skills` points at his repository (MIT licence, © Matt Pocock). It installs all of his skills, because his repo is a single plugin. After installing, run `/setup-matt-pocock-skills` once per repo. His `to-spec` and `to-tickets` skills need it.
 
 ## Installation
 

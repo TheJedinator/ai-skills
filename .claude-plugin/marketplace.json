@@ -25,6 +25,14 @@
       "description": "Query and create Linear issues, sprints, triage and team workload via the GraphQL API"
     },
     {
+      "name": "mattpocock-skills",
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      },
+      "description": "Matt Pocock's engineering skills (grilling, to-spec, tdd, code-review and more). Maintained upstream, MIT licensed."
+    },
+    {
       "name": "stacked-prs",
       "source": "./stacked-prs",
       "description": "Manage stacked pull requests: creation, cascade rebase, merge-down, and restructuring"
@@ -34,5 +42,6 @@
       "source": "./tidy-first",
       "description": "Tidy-first refactoring patterns: separate structural changes from behavioral changes"
     }
-  ]
+  ],
+  "description": "Personal skills for PR workflows, Linear and refactoring, plus a pointer to Matt Pocock's skills"
 }
