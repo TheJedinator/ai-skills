@@ -4,37 +4,14 @@ A Claude Code plugin marketplace providing skills that extend Claude's capabilit
 
 ## Available Plugins
 
-### django-models
-
-Navigate and understand Django models in any codebase. Provides:
-
-- Model discovery patterns using Grep/Glob/Read
-- Field types quick reference
-- Relationship navigation strategies
-- Common query patterns
-- Financial domain business logic (accounting, payments, banking, FX)
-
-### git-town
-
-Automate Git workflows with Git Town. Provides:
-
-- Feature branch creation with `git town hack`
-- Stacked PR workflows with `git town append`
-- Branch syncing with `git town sync`
-- PR creation with `git town propose`
-- Branch lineage tracking and management
-- Comprehensive guidance on when to use git town vs manual git commands
-
-### torvalds-stallman
-
-Sardonic, Socratic code reviewer that pressure-tests design decisions. Provides:
-
-- Design-level critique of naming, abstractions, and architecture
-- Logic correctness analysis and edge case detection
-- Performance review (N+1 queries, hot path analysis)
-- Test quality assessment (coverage gaps, mock depth, parameterization)
-- Systems thinking critique (coupling, downstream implications)
-- Runs as an autonomous agent with read-only codebase analysis
+| Plugin | What it does |
+|---|---|
+| babysit-pr-stack | Owns a chain of stacked PRs until every PR merges: merge order, restacking, reviews, CI |
+| creating-pull-requests | Creates a GitHub PR with a `## Why` / `## What` body from the branch diff |
+| handoff | Summarizes the current session inline for another agent or person |
+| linear-issues | Queries and creates Linear issues, sprints, triage and team workload via GraphQL |
+| stacked-prs | Creates, cascade-rebases, merges down and restructures stacked PR chains |
+| tidy-first | Separates structural (tidying) commits from behavioral commits |
 
 ## Installation
 
@@ -48,12 +25,10 @@ Sardonic, Socratic code reviewer that pressure-tests design decisions. Provides:
 
 ```bash
 # Install for all projects (user scope)
-/plugin install django-models@ai-skills
-/plugin install git-town@ai-skills
+/plugin install stacked-prs@ai-skills
 
 # Or install for current project only
-claude plugin install django-models@ai-skills --scope project
-claude plugin install git-town@ai-skills --scope project
+claude plugin install stacked-prs@ai-skills --scope project
 ```
 
 ## Plugin Structure
@@ -64,11 +39,11 @@ This marketplace follows the Claude Code plugin format:
 ai-skills/
 ├── .claude-plugin/
 │   └── marketplace.json        # Marketplace manifest
-└── django-models/              # Plugin
+└── linear-issues/              # Plugin
     ├── .claude-plugin/
     │   └── plugin.json         # Plugin manifest
     └── skills/
-        └── django-models/
+        └── linear-issues/
             ├── SKILL.md        # Main skill file
             └── references/     # On-demand reference material
 ```

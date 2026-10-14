@@ -5,14 +5,24 @@
   },
   "plugins": [
     {
-      "name": "creating-pull-requests",
-      "source": "./creating-pull-requests",
-      "description": "Standardized PR creation with ## Why / ## What format using gh CLI"
+      "name": "babysit-pr-stack",
+      "source": "./babysit-pr-stack",
+      "description": "Own a chain of stacked PRs until every PR merges: merge in order, restack, answer reviews, fix CI"
     },
     {
-      "name": "django-models",
-      "source": "./django-models",
-      "description": "Navigate and understand Django models in any codebase"
+      "name": "creating-pull-requests",
+      "source": "./creating-pull-requests",
+      "description": "Standardized PR creation with ## Why / ## What format using gh CLI, for any repo"
+    },
+    {
+      "name": "handoff",
+      "source": "./handoff",
+      "description": "Summarize the current session inline for another agent or person"
+    },
+    {
+      "name": "linear-issues",
+      "source": "./linear-issues",
+      "description": "Query and create Linear issues, sprints, triage and team workload via the GraphQL API"
     },
     {
       "name": "stacked-prs",
@@ -23,11 +33,6 @@
       "name": "tidy-first",
       "source": "./tidy-first",
       "description": "Tidy-first refactoring patterns: separate structural changes from behavioral changes"
-    },
-    {
-      "name": "torvalds-stallman",
-      "source": "./torvalds-stallman",
-      "description": "Sardonic, Socratic code reviewer that pressure-tests design decisions"
     }
   ]
 }
