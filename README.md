@@ -1,68 +1,70 @@
-# AI Skills Plugin Marketplace
+# ai-skills
 
-A Claude Code plugin marketplace providing skills that extend Claude's capabilities with specialized knowledge and workflows.
+My agent skills, in one repo, for Claude Code, opencode, pi and Codex. This repo is the source of truth; my dotfiles symlink into it.
 
-## Available Plugins
+## Skills
 
-| Plugin | What it does |
+Mine:
+
+| Skill | What it does |
 |---|---|
 | babysit-pr-stack | Owns a chain of stacked PRs until every PR merges: merge order, restacking, reviews, CI |
 | creating-pull-requests | Creates a GitHub PR with a `## Why` / `## What` body from the branch diff |
 | handoff | Summarizes the current session inline for another agent or person |
+| humanizer | Removes signs of AI writing from text, with voice samples to match my register |
 | linear-issues | Queries and creates Linear issues, sprints, triage and team workload via GraphQL |
-| mattpocock-skills | Matt Pocock's skills (grilling, to-spec, tdd, code-review and more), installed from [mattpocock/skills](https://github.com/mattpocock/skills). Not copied here; updates come from upstream |
+| obsidian-cli | Drives Obsidian from the terminal via the `obsidian` CLI |
 | stacked-prs | Creates, cascade-rebases, merges down and restructures stacked PR chains |
 | tidy-first | Separates structural (tidying) commits from behavioral commits |
 
-## Matt Pocock's skills
+From [mattpocock/skills](https://github.com/mattpocock/skills), copied so I can pick a subset and edit (see [CREDITS.md](CREDITS.md)):
 
-`mattpocock-skills` points at his repository (MIT licence, © Matt Pocock). It installs all of his skills, because his repo is a single plugin. After installing, run `/setup-matt-pocock-skills` once per repo. His `to-spec` and `to-tickets` skills need it.
+| Skill | What it does |
+|---|---|
+| grilling, grill-me, grill-with-docs | Relentless interview to sharpen a plan; the docs variant also writes GLOSSARY.md and ADRs |
+| to-spec, to-tickets | Turn a conversation into a spec, then into tracer-bullet tickets |
+| implement, implement-spec | Build from a spec or tickets, driving tdd and closing with code-review |
+| tdd | Red-green-refactor loop |
+| code-review | Two-axis review: coding standards and spec fidelity |
+| diagnosing-bugs | Disciplined diagnosis loop for hard bugs and regressions |
+| prototype | Throwaway prototype to answer a design question |
+| research | Investigate a question against primary sources into a cited Markdown file |
+| domain-modeling, codebase-design | Domain vocabulary and deep-module design discipline |
+| writing-for-agents | Writing skills, AGENTS.md and CLAUDE.md |
+| setup-matt-pocock-skills | One-time per-repo setup for to-spec, to-tickets and friends |
+| retro | Suggest environment improvements after a session |
+| wizard | Generate a bash wizard for steps only a human can do |
 
-## Installation
+## Install
 
-### 1. Add the Marketplace
+Pick individual skills, any agent:
+
+```bash
+npx skills@latest add TheJedinator/ai-skills
+```
+
+Everything as one Claude Code plugin:
 
 ```bash
 /plugin marketplace add TheJedinator/ai-skills
+/plugin install ai-skills@ai-skills
 ```
 
-### 2. Install a Plugin
+On my machines, dotfiles symlink `~/.local/share/agent-skills/<skill>` to `skills/<skill>` in a clone at `~/personal-github/ai-skills`.
 
-```bash
-# Install for all projects (user scope)
-/plugin install stacked-prs@ai-skills
-
-# Or install for current project only
-claude plugin install stacked-prs@ai-skills --scope project
-```
-
-## Plugin Structure
-
-This marketplace follows the Claude Code plugin format:
+## Layout
 
 ```
-ai-skills/
-├── .claude-plugin/
-│   └── marketplace.json        # Marketplace manifest
-└── linear-issues/              # Plugin
-    ├── .claude-plugin/
-    │   └── plugin.json         # Plugin manifest
-    └── skills/
-        └── linear-issues/
-            ├── SKILL.md        # Main skill file
-            └── references/     # On-demand reference material
+.claude-plugin/
+  marketplace.json   # one plugin, source ./
+  plugin.json        # lists every skills/<name>
+skills/<name>/
+  SKILL.md
+  ...                # references, agents, scripts
 ```
 
-## Contributing
+Add a skill: create `skills/<name>/SKILL.md`, add its path to `plugin.json`.
 
-To add a new plugin:
+## Licence
 
-1. Create a plugin directory at the root (e.g., `my-plugin/`)
-2. Add `.claude-plugin/plugin.json` with name, version, description
-3. Add your skills under `skills/` within the plugin
-4. Update `marketplace.json` to include your plugin
-5. Submit a PR
-
-## License
-
-MIT License - see [LICENSE](LICENSE)
+MIT, see [LICENSE](LICENSE). Copied skills keep their own licence in `skills/LICENSE-mattpocock`.
