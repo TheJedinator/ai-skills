@@ -1,0 +1,16 @@
+{
+  "name": "ai-skills",
+  "version": "2.0.0",
+  "description": "Jed Palmater's agent skills: PR workflows, Linear, refactoring, writing, plus a curated subset of Matt Pocock's engineering skills.",
+  "author": { "name": "Jed Palmater" },
+  "repository": "https://github.com/TheJedinator/ai-skills",
+  "license": "MIT",
+  "skills": [
+    "./skills/babysit-pr-stack",
+    "./skills/creating-pull-requests",
+    "./skills/handoff",
+    "./skills/linear-issues",
+    "./skills/stacked-prs",
+    "./skills/tidy-first"
+  ]
+}
