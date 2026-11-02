@@ -739,40 +739,6 @@ Welcome to my brain, it’s s scary place.
 
 ---
 
-<!-- Source: PR review comments, floatfinancial/core-backend, various dates (work register - typed live in GitHub review UI, not run through the creating-pull-requests drafting skill) -->
-
-(discussion_r3544586362, PR #29804)
-Hmm, this one's a bit tricky because this is actually testing by omission rather than declaration. I'm not sure how we necessarily solve for that, but this is essentially a coincidental pass, not an intentional pass
-
-(discussion_r3544600938, PR #29804)
-Maybe don't test the actual log call assertion, but test the key values are stripped as expected from the method. Testing a logger is testing a built-in, which generally just isn't worth the effort
-
-(discussion_r3537247381, PR #29777)
-this adds a maintenance list regardless which I don't think is sustainable. if we have one difference name the difference? So contains IDEM or equals maintenance queue??
-
-(discussion_r3474379483, PR #29528)
-This method AND validate_no_circular_management work against the same data and do the same object construction. Worth unifying as a single method that does the extraction first and then delegates the validation to each method respectively.
-
-(discussion_r3474498805, PR #29495)
-this conditional makes an assumption and then logs that same assumption - That if we don't find it, it's because it's not in scheduled state - it could be deleted, it could be a bad id (somehow) it doesn't necessarily mean it's not scheduled anymore. I don't think it's a huge deal but I find it hard to take the log at face value and if someone in the future is debugging this, they might...
-
-(discussion_r3474519470, PR #29495)
-This will not update in the audit log. We should never do direct updates on querysets...
-
-prefer query - obtain
-limit.status = new_val
-limit.save(fields=[status], updated_by=get_or_create_journal_j())
-
-since you're already in a loop there's no addditional benefit to using .update() on a queryset
-
-(discussion_r3474544849, PR #29495)
-you have two dependencies in this class on the businesses feature flags.. might be worth declaring explicitly as a property? depends how long the Feature flag switches live but something to consider.
-
-(issuecomment-4792005475, PR #29466, reply to a reviewer)
-not sure specifically what you mean but the two maintenance tasks here weren't min rebasing
-
----
-
 <!-- Source: provided directly by user (personal narrative / travel-writing register) -->
 
 We arrived around 12:30pm on Tuesday January 2 2024 to Penn station Moynihan train hall. We were feeling well rested, having spent the evening in New Haven Connecticut in a spacious king bedroom after indulging in a style of pizza unique to the city.
