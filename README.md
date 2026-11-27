@@ -14,7 +14,7 @@ Mine:
 | humanizer | Removes signs of AI writing from text, with voice samples to match my register |
 | linear-issues | Queries and creates Linear issues, sprints, triage and team workload via GraphQL |
 | obsidian-cli | Drives Obsidian from the terminal via the `obsidian` CLI |
-| stacked-prs | Creates, cascade-rebases, merges down and restructures stacked PR chains |
+| stacked-prs | Builds and restructures a PR stack with `gh stack` while the work is in progress; `babysit-pr-stack` lands it |
 | tidy-first | Separates structural (tidying) commits from behavioral commits |
 
 From [mattpocock/skills](https://github.com/mattpocock/skills), copied so I can pick a subset and edit (see [CREDITS.md](CREDITS.md)):
