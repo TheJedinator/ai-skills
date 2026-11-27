@@ -1,211 +1,97 @@
 ---
 name: stacked-prs
-description: Manage stacked pull requests — creating PR chains, cascade rebasing after changes, merging master down after a parent ships, restructuring/splitting stacks, and the nuclear "close all and recreate" option. Use whenever working with dependent/stacked PRs, when a parent PR merges and children need updating, when PRs need to be split or reordered, or when branch names have drifted from PR content. Also triggers on "merge master down", "rebase the stack", "cascade rebase", "split this PR", or "restructure the stack".
+description: Build and restructure a stack of PRs with `gh stack` while the work is in progress — create the chain, add a layer, fix a lower branch and restack, sync after main moves, split, reorder or fold PRs without closing them. Use whenever working with dependent/stacked PRs before they land, or on "stack this", "split this PR", "rebase the stack", "restack", "cascade rebase", "merge main down" or "restructure the stack". To land a finished stack, use `babysit-pr-stack`.
 ---
 
 # Stacked PRs
 
-## Mental Model
+A stack is an ordered chain of branches. Each branch builds on the one below it, and each branch has one PR. The bottom PR targets the repo's default branch (the trunk). Each higher PR targets the branch below it, so reviewers see only that layer.
 
 ```
-master
-  └── PR 1 (branch: feature-1-models)      ← targets master
-       └── PR 2 (branch: feature-2-service) ← targets feature-1-models
-            └── PR 3 (branch: feature-3-endpoint) ← targets feature-2-service
+<user>/<ticket>-3-endpoint → PR #3 (base: <ticket>-2-service)  ← top
+<user>/<ticket>-2-service  → PR #2 (base: <ticket>-1-models)
+<user>/<ticket>-1-models   → PR #1 (base: main or master)      ← bottom
 ```
 
-Each PR's `--base` is the branch of its parent PR. When PR 1 merges to master, PR 2 rebases onto master and retargets `--base master`.
+This skill covers the stack while you build it. To merge it, use `babysit-pr-stack`.
 
-## Creating a Stack
+## Rules
 
-Build each branch from its parent. Push and create PRs with explicit `--base`:
+- Use `gh stack` for every stack operation. Install it once with `gh extension install github/gh-stack`.
+- Find the trunk; do not assume it: `gh repo view --json defaultBranchRef -q .defaultBranchRef.name`. It is `main` or `master`, depending on the repo.
+- Never close and recreate PRs to restructure a stack. Closing loses review threads and approvals. The steps below change the stack and keep every PR.
+- Open PRs ready for review, not as drafts.
+- Keep each PR reviewable. A large mechanical change (a rename, a move) goes in its own PR at the bottom of the stack.
+- Number branches so the stack order is visible: `<user>/<ticket>-<n>-<slug>`.
+
+## Create a stack
 
 ```bash
-# PR 1
-git checkout -b <user>/feature-1-models master
-# ... implement ...
-git push -u origin <user>/feature-1-models
-gh pr create --base master --title "Part 1: Models" --assignee @me
-
-# PR 2
-git checkout -b <user>/feature-2-service <user>/feature-1-models
-# ... implement ...
-git push -u origin <user>/feature-2-service
-gh pr create --base <user>/feature-1-models --title "Part 2: Service" --assignee @me
-
-# PR 3
-git checkout -b <user>/feature-3-endpoint <user>/feature-2-service
-# ... implement ...
-git push -u origin <user>/feature-3-endpoint
-gh pr create --base <user>/feature-2-service --title "Part 3: Endpoint" --assignee @me
+gh stack init <user>/<ticket>-1-models       # creates and checks out the bottom branch on the trunk
+# ... commit ...
+gh stack add <user>/<ticket>-2-service       # creates the next branch on top of the current one
+# ... commit ...
+gh stack push                                # pushes every branch, each with --force-with-lease
 ```
 
-### Naming Convention
-
-Number branches to make stack order obvious:
-
-```
-<user>/<ticket>-1-external-message-id
-<user>/<ticket>-2-delivery-event-model
-<user>/<ticket>-3-courier-webhook-model
-<user>/<ticket>-4-persist-on-send
-```
-
-This prevents confusion when restructuring — branch names immediately tell you the order.
-
-## Cascade Rebase (Parent Changed)
-
-When you amend or add commits to a parent branch, all children must rebase. Work top-down from the changed branch:
+Open each PR with the `creating-pull-requests` skill, bottom first. Pass `--base` as the branch below; the bottom PR's base is the trunk. Then link the PRs into a stack on GitHub:
 
 ```bash
-# Parent (PR 1) was amended
-git checkout <user>/feature-2-service
-git rebase <user>/feature-1-models
-git push --force-with-lease
-
-git checkout <user>/feature-3-endpoint
-git rebase <user>/feature-2-service
-git push --force-with-lease
+gh stack sync
 ```
 
-### Handling "already applied" conflicts
+`gh stack submit` also opens PRs, but it is an interactive editor. `gh stack submit --auto` makes draft PRs with generated titles. Do not use either one as an agent.
 
-After restructuring, git may try to replay commits that are already in the parent. You'll see:
+To adopt branches that already exist, list them bottom to top: `gh stack init <branch-1> <branch-2> ...`.
 
-```
-Could not apply abc123... Some commit message
-```
+## Fix a lower branch
 
-If the commit is already part of the new base (common after amending a parent), skip it:
+Review feedback or a bug in a lower PR: commit the fix on the branch that owns the code, then restack the branches above it.
 
 ```bash
-git rebase --skip
+gh stack checkout <lower-branch>             # or: gh stack down [n]
+# ... commit ...
+gh stack rebase --upstack                    # rebase this branch's descendants onto it
+gh stack push
 ```
 
-Only skip when you're certain the commit's changes are already upstream. If unsure, check with `git log --oneline <base-branch>` to confirm the work is there.
+After review starts, add the fix as a new commit. Do not amend or autosquash it into an earlier commit.
 
-### GIT_EDITOR trick for non-interactive continue
+## Sync with the trunk
 
-When all conflicts are resolved but git wants you to edit the commit message:
+After review starts, rebase onto the trunk only for a conflict or a restack. Each push re-runs CI on every pushed PR.
 
 ```bash
-GIT_EDITOR=true git rebase --continue
+gh stack sync                                # fetch, rebase the stack if the trunk moved, push, refresh PR state
 ```
 
-## Merging Master Down (Parent PR Shipped)
+If the rebase conflicts, `sync` restores every branch and stops. Then run `gh stack rebase`, resolve each conflict, `git add` the files, and run `gh stack rebase --continue`. To give up, run `gh stack rebase --abort`.
 
-When a parent PR merges to master, the next child becomes the new stack root:
+When a lower PR merges with a squash, `gh stack rebase` switches to `--onto` mode, so the old commits do not conflict with the squash commit. Do not run `git rebase <trunk>` by hand on a stack: after a squash merge it replays the merged commits.
+
+## Restructure a stack
+
+`gh stack modify` drops, folds, inserts, reorders and renames branches, then `gh stack submit` pushes the result. It keeps the PRs. It is an interactive terminal UI, so an agent cannot run it. Ask the user to run it for a reorder or fold.
+
+An agent can split a PR without `modify`:
+
+1. Create a branch at the last commit that belongs in the lower part: `git branch <user>/<ticket>-2a-<slug> <sha>`.
+2. Unlink the stack on GitHub and locally: `gh stack unstack`. The PRs stay open, with their reviews.
+3. Track the branches again, bottom to top: `gh stack init <branch-1> <branch-2a> <branch-2> ...`.
+4. Push, then open a PR for the new branch with the `creating-pull-requests` skill.
+5. Point every PR at the branch below it: `gh pr edit <pr> --base <branch-below>`.
+6. Link the stack again: `gh stack sync`.
+
+A renamed branch on GitHub gets a new PR, because a PR's head branch cannot change. Rename a branch only before its PR is open.
+
+## Check the stack
+
+After any rebase or restructure:
 
 ```bash
-# PR 1 just merged to master
-git checkout master && git pull
-
-# Rebase PR 2 onto master (PR 1's commit will be skipped automatically)
-git checkout <user>/feature-2-service
-git rebase master
-git push --force-with-lease
-
-# Update PR 2's base to master
-gh pr edit <pr-number> --base master
-
-# Cascade to remaining children
-git checkout <user>/feature-3-endpoint
-git rebase <user>/feature-2-service
-git push --force-with-lease
+gh stack view --short                        # order, branches, PR numbers
+gh pr list --author "@me" --state open --json number,headRefName,baseRefName \
+  --jq '.[] | "\(.number): \(.headRefName) → \(.baseRefName)"'
 ```
 
-The key insight: `git rebase master` on a child branch will automatically skip commits that are now in master (they were part of the merged parent PR). You may still need `git rebase --skip` for edge cases.
-
-## Restructuring a Stack
-
-When PRs need to be split, reordered, or renamed, the cleanest approach is the nuclear option: close all PRs, create fresh branches, open new PRs. Trying to rename branches or change targets on open stacked PRs leads to chaos.
-
-### The Nuclear Option
-
-```bash
-# 1. Close all PRs in the stack
-gh pr close <pr-1>
-gh pr close <pr-2>
-gh pr close <pr-3>
-
-# 2. Delete old remote branches
-git push origin --delete old-branch-1 old-branch-2 old-branch-3
-
-# 3. Create new branches pointing at the correct commits
-git branch <user>/feature-1-new-name <commit-sha-for-pr1>
-git branch <user>/feature-2-new-name <commit-sha-for-pr2>
-git branch <user>/feature-3-new-name <commit-sha-for-pr3>
-
-# 4. Push all new branches
-git push origin <user>/feature-1-new-name <user>/feature-2-new-name <user>/feature-3-new-name
-
-# 5. Create new PRs with correct stacking
-gh pr create --head <user>/feature-1-new-name --base master --title "..." --assignee @me
-gh pr create --head <user>/feature-2-new-name --base <user>/feature-1-new-name --title "..." --assignee @me
-gh pr create --head <user>/feature-3-new-name --base <user>/feature-2-new-name --title "..." --assignee @me
-
-# 6. Clean up old local branches
-git branch -D old-branch-1 old-branch-2 old-branch-3
-```
-
-### When to go nuclear
-
-- Branch names no longer match PR content (from splitting/reordering)
-- GitHub closed a PR due to force-push divergence (can't reopen)
-- The stack order needs to change
-- PRs need to be split into more granular pieces
-
-### Splitting a PR
-
-If a PR does too much (e.g., two models in one PR), extract the commits:
-
-```bash
-# Start a new branch from the parent
-git checkout -b <user>/feature-2a-first-model <user>/feature-1-parent
-
-# Cherry-pick only the relevant commits (or implement fresh)
-# ... make changes for just model A ...
-git commit -m "Add ModelA"
-
-# Now create the second branch from the first
-git checkout -b <user>/feature-2b-second-model <user>/feature-2a-first-model
-# ... make changes for just model B ...
-git commit -m "Add ModelB"
-```
-
-## Verification After Any Stack Operation
-
-After any rebase or restructure, verify the stack is healthy:
-
-```bash
-# Check all PRs are open with correct bases
-gh pr list --author "@me" --state open \
-  --json number,title,headRefName,baseRefName \
-  --jq '.[] | select(.headRefName | startswith("<branch-prefix>")) | "\(.number): \(.title)\n  \(.headRefName) → \(.baseRefName)\n"'
-
-# Run the repo's lint, typecheck and tests on the leaf branch (catches everything)
-git checkout <leaf-branch>
-<lint> && <typecheck> && <test>
-```
-
-If a PR is missing, has the wrong base, or a check fails, fix it and run this block again. Stop when the list matches the intended stack and the checks pass.
-
-## Common Pitfalls
-
-| Pitfall | Solution |
-|---------|----------|
-| GitHub auto-closes PR on force-push | Go nuclear — close all, recreate with fresh branches |
-| `git rebase` replays already-merged commits | `git rebase --skip` when the commit is in the new base |
-| Branch name doesn't match PR content | Go nuclear — rename costs less than confusion |
-| Forgetting `--force-with-lease` | Always use it (not `--force`) — it protects against overwriting others' pushes |
-| Rebasing in wrong order (child before parent) | Always rebase top-down: parent first, then children in order |
-| `gh pr edit --base` without rebasing first | Always rebase onto new base BEFORE updating the PR target |
-| Closing an unrelated PR when batch-closing | Filter by branch name pattern, not blanket close |
-
-## One Model Per PR Rule
-
-When building features that involve multiple models, each model creation or modification gets its own PR in the stack. This means:
-
-- Adding a field to an existing model = 1 PR
-- Creating a new model = 1 PR
-- Never bundle two model changes in one PR
+Every PR's base must be the branch below it, and the bottom PR's base must be the trunk. Then run the repo's lint and tests on the top branch. If something is wrong, fix it and check again.
